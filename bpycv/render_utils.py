@@ -13,7 +13,6 @@ import bpy
 import time
 import tempfile
 
-from .select_utils import scene, render
 from .statu_recover import StatuRecover, undo
 from .exr_image_parser import parser_exr, ImageWithAnnotation
 from .material_utils import set_inst_material
@@ -22,6 +21,8 @@ from .pose_utils import get_6d_pose
 
 class set_annotation_render(StatuRecover):
     def __init__(self):
+        scene = bpy.context.scene
+        render = scene.render
         StatuRecover.__init__(self)
         # TODO detect whether in ssh X11 forward
         # if sysi.gui:  # mean "does the enviroment support GUI".
@@ -55,6 +56,7 @@ class set_annotation_render(StatuRecover):
 
 class set_image_render(StatuRecover):
     def __init__(self):
+        render = bpy.context.scene.render
         StatuRecover.__init__(self)
         # self.set_attr(render, "engine", "BLENDER_EEVEE" if eevee else "CYCLES")
         # self.set_attr(scene.cycles, "samples", 128)
@@ -66,6 +68,7 @@ class set_image_render(StatuRecover):
 
 # @undo()
 def render_data(render_image=True, render_annotation=True):
+    render = bpy.context.scene.render
     path = pathjoin(tempfile.gettempdir(), "render_" + str(time.time()))
     render_result = {}
     if render_image:
